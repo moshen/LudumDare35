@@ -4,12 +4,13 @@ set -e
 
 project="$(basename $(pwd))"
 webFileName="${project}-web.zip"
-desktopFileName="$(ls -1 desktop/build/libs/desktop-*.jar | tail -n 1 | perl -pe 'chomp')"
+projectVersion="$(./gradlew printVersion | perl -ne 'chomp; print if $prevline eq ":printVersion"; $prevline = $_;')"
+desktopFileName="desktop/build/libs/desktop-${projectVersion}.jar"
 
 if [[ -n $TRAVIS_BUILD_NUMBER ]]; then
   bintrayVersion="build-$TRAVIS_BUILD_NUMBER"
 else
-  bintrayVersion="$(./gradlew printVersion | perl -ne 'chomp; print if $prevline eq ":printVersion"; $prevline = $_;')"
+  bintrayVersion="$projectVersion"
 fi
 
 bintrayApiUrl="https://api.bintray.com/content/${BINTRAY_USER}/${BINTRAY_REPO}/${project}/${bintrayVersion}"

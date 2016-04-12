@@ -26,3 +26,7 @@ if [ ! -x "${ANDROID_HOME}/tools/android" ]; then
   # Install/update the required Android SDK components.
   echo yes | android update sdk -a --filter "platform-tools,build-tools-20.0.0,android-20" --no-ui --force > /dev/null
 fi
+
+if [[ ! -r local.properties ]] || [[ -z $(grep 'travis/android-sdk-linux' local.properties) ]]; then
+  echo "sdk.dir=travis/android-sdk-linux" > local.properties
+fi
